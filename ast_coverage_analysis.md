@@ -1,4 +1,4 @@
-# NIMBLE Derleyici - AST Kapsam Analizi (ULTRA Mod)
+# NIMBLE Derleyici - AST Kapsam Analizi <(Claude Sonnet 4.5)
 
 > **Oluşturulma Tarihi**: 2025-12-28  
 > **Analiz Modu**: ULTRA (Maksimum Derinlik)  
