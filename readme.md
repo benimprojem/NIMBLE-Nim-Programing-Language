@@ -51,8 +51,8 @@ fn main(): i32 {
 style basari = "\x1b[32m";
 
 fn main(): i32 {
-    print("success", "İşlem başarılı!\n");
-    print("basari", "Özel stil\n");
+    print("İşlem başarılı!\n", "success");
+    print("Özel stil\n", "basari");
     return 0;
 }
 ```
@@ -124,4 +124,5 @@ NIMBLE, modern sistem programlama ihtiyaçları için geliştirilmektedir.
 ---
 
 **Not**: Bu proje aktif geliştirme aşamasındadır. Production kullanımı için henüz hazır değildir.
+
 
