@@ -1,4 +1,4 @@
-// Parser Testi: Karmaşık Yapılar (Generic, Array, Match)
+// Array, vector, matris Testi: Karmaşık Yapılar (Generic, Array, Match)
 
 fn main() {
     // 1. Array Tanımlamaları
@@ -36,3 +36,4 @@ fn main() {
     echo(mesaj);
     echo(sonuc);
 }
+
