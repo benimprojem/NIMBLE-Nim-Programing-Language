@@ -1,69 +1,108 @@
-_strlen Nasıl Kullanılır?
-Girdi (Input): Ölçmek istediğiniz string'in bellek adresini (pointer) RCX register'ına koymalısınız.
-Çıktı (Output): Fonksiyon bittiğinde, string'in uzunluğu RAX register'ında döner.
+Bu rehber, yazdığın düşük seviyeli `_print` fonksiyonunu herhangi bir projede (C, C++, Rust, Zig veya direkt Assembly) nasıl bir **standart kütüphane modülü** gibi kullanabileceğini adım adım açıklar.
 
+---
 
-_print fonksiyonunu bir kütüphane modülü gibi nasıl kullanabileceğinizi adım adım özetleyen bir rehber.
+## Düşük Seviyeli I/O Modülü (`_print.obj`) Kullanım Rehberi
 
-Önemli: _print sembolünü dışarıdan görünür kılmak için .global _print satırı kalmalıdır.
-Dosya B: main.s (Kullanıcı Dosyası)
-Burada _print fonksiyonunu kullanacağız.
+Bu modül, işletim sistemi bağımlılıklarını (Windows API) soyutlayarak, yüksek seviyeli dillerin ve derleyicilerin doğrudan ekran çıktısı vermesini sağlayan taşınabilir bir nesne dosyasıdır.
 
-asm
-.intel_syntax noprefix
-.section .text
-.global main
-.extern _print  # Dışarıdaki fonksiyonu bildirdik
-.extern _strlen # strlen fonksiyonu str adresi rcx  dönüş rax..
-main:
-    sub rsp, 40              # Hizalama ve gölge alan
-    
-    lea rcx, [msg]           # 1. Argüman: Format
-    mov rdx, 123             # 2. Argüman: Sayı
-    call _print              # Kütüphanedeki fonksiyonu çağır
-    
-    xor rcx, rcx
-    call ExitProcess
-.section .data
-    msg: .asciz "Sayı: %d\r\n"
+### 1. Bileşenlerin Hazırlanması
 
+Öncelikle, assembly kaynak kodunuzu (`_print.s`) her dilden bağlanabilir bir ikili (binary) nesne dosyasına dönüştürmeniz gerekir.
 
-Parametre Geçişi (Calling Convention):
-İlk 4 parametreyi sırasıyla RCX, RDX, R8, R9 registerlarına koyun.
-ve sonraki parametreleri yığına ([RSP+32]'den başlayarak) koyun.
-Kritik: call _print öncesi sub rsp, 40 (veya daha fazla) yaparak yığını 16-byte hizalı tutun.
+**Derleme Komutu (GCC/MinGW):**
 
+```bash
+gcc -c _print.s -o _print.obj
 
+```
 
+### 2. Kütüphane Arayüzü (API) Tanımları
 
+Diğer dillerin bu fonksiyonu tanıyabilmesi için fonksiyon imzasını belirtmek şarttır.
 
+#### **C ve C++ için:**
 
-## Derleme ve Obj (Nesne) Dosyası Oluşturma
-Kütüphane kodunuzu her seferinde yeniden derlemek yerine bir kez .obj dosyasına çevirip saklayabilirsiniz:
+```c
+// print_lib.h
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-cmd
-# Sadece obje dosyası üretir (linkleme yapmaz)
-gcc -c print.s -o print.obj
-3. Bağlama (Linking) Süreci
-Ana programınızı derlerken, daha önce oluşturduğunuz .obj dosyasını linker'a (bağlayıcıya) tanıtmanız gerekir:
+// Değişken sayıda argüman alan ana fonksiyon
+void _print(const char* format, ...);
 
-cmd
-# main.S'i derle ve print_lib.obj ile bağla
-gcc main.S print_lib.obj -o my_app.exe -nostdlib -lkernel32 -e main
-4. Dışarıdan Kullanım (Nimble Veya Başka Dillerden)
-Eğer bu fonksiyonu kendi yazdığınız bir derleyicinin (Nimble gibi) çıktısına ekleyecekseniz:
+#ifdef __cplusplus
+}
+#endif
 
-Assembly Çıktısına Bildirim Ekle: Derleyiciniz ürettiği 
-.asm
- veya 
-.S
- dosyasının başına extern _print satırını otomatik eklemeli.
-Statik Linkleme: Derleme aşamasının sonunda linker komutuna print_lib.obj dosyasını eklemelisiniz.
-Parametre Geçişi (Calling Convention):
-İlk 4 parametreyi sırasıyla RCX, RDX, R8, R9 registerlarına koyun.
-ve sonraki parametreleri yığına ([RSP+32]'den başlayarak) koyun.
-Kritik: call _print öncesi sub rsp, 40 (veya daha fazla) yaparak yığını 16-byte hizalı tutun.
-Özetle Mantık
-.obj Hazırla: Fonksiyonu bir kez paketle.
-extern ile Çağır: Diğer dosyalarda varlığını bildir.
-Linker ile Birleştir: EXE üretirken tüm parçaları uç uca ekle.
+```
+
+#### **Zig için:**
+
+```zig
+extern fn _print(format: [*:0]const u8, ...) void;
+
+```
+
+#### **Direct Assembly için:**
+
+```assembly
+extern _print:proc
+# Çağrı: lea rcx, [fmt]; mov rdx, rax; call _print
+
+```
+
+---
+
+### 3. Kullanım Senaryoları ve Entegrasyon
+
+#### **A. C/C++ Projelerinde Kullanım**
+
+Eğer kendi standart kütüphaneni yazıyorsan veya `printf`'e bağımlı olmak istemiyorsan:
+
+```c
+#include "print_lib.h"
+
+int main() {
+    float pi = 3.141592;
+    _print("Merhaba Dunya!\n");
+    _print("Hesaplama Sonucu: %f\n", pi);
+    return 0;
+}
+
+```
+
+**Bağlama (Linking):**
+`gcc main.c _print.obj -o uygulama.exe`
+
+#### **B. Derleyici (Compiler) Geliştirmede Kullanım**
+
+Kendi derleyicini yazıyorsan (Rust, Python tabanlı bir derleyici vb.), `_print.obj` dosyasını bir **Runtime Library** parçası olarak dağıtabilirsin.
+
+1. Derleyicin, print komutu gördüğünde `call _print` assembly kodunu üretir.
+2. Son aşamada (Linker aşaması), derleyicin otomatik olarak `_print.obj` dosyasını kullanıcının koduyla birleştirir.
+
+---
+
+### 4. Teknik Gereksinimler (Windows x64 ABI)
+
+Bu modülü kullanan her sistem, Windows'un çağrı standartlarına uymak zorundadır. Modülün çalışması için şu 3 kural kritiktir:
+
+1. **Shadow Space:** Fonksiyon çağrılmadan önce `RSP` üzerinden 32 (veya hizalama ile 40) byte boş alan ayrılmalıdır.
+2. **Register Sıralaması:** İlk 4 argüman sırasıyla `RCX`, `RDX`, `R8`, `R9` register'larında olmalıdır.
+3. **Hizalama:** `call` komutu verildiği anda `RSP` değeri 16-byte hizalı olmalıdır.
+
+---
+
+### 5. Modülün Avantajları
+
+* **Minimalizm:** `msvcrt.dll` veya ağır standart kütüphanelere olan bağımlılığı azaltır.
+* **Doğrudan Donanım Erişimi:** Float işlemleri için doğrudan `XMM` register'larını kullanarak yüksek performans sağlar.
+* **Bağımsızlık:** Herhangi bir dilden (Native destekleyen) çağrılabilir; çünkü `C` tipi çağırma konvansiyonuna (`extern "C"`) uygundur.
+
+---
+
+### 6. Gelecek Geliştirmeler İçin Not
+
+Bu modülü bir kütüphane haline getirdiğinde, yanına bir `_scanf.obj` (giriş için) ve `_file.obj` (dosya işlemleri için) ekleyerek kendi **Core SDK**'nı oluşturabilirsin.
