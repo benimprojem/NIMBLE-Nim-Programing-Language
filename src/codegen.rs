@@ -1,24 +1,24 @@
 // src/codegen.rs
 
-use crate::ast::{Decl, Stmt, Expr, LiteralValue, TargetPlatform, Type, BinOp, UnOp}; // BinaryOp -> BinOp
+use crate::ast::{Decl, Stmt, Expr, LiteralValue, TargetPlatform, Type, BinOp, UnOp};
 use crate::type_checker::TypeChecker;
 
 // Platforma özel kod üretimi modülleri
-mod windows;
-mod linux;
-mod macos;
+//mod windows;
+//mod linux;
+//mod macos;
 
 #[derive(Debug, Clone)]
 struct VariableLocation {
     stack_offset: i32,
-    // YENİ: Değişkenin tipini de burada saklayacağız.
+    // Değişkenin tipini de burada saklayacağız.
     // Bu, TypeChecker'a tekrar sormamızı engeller.
     ty: Type,
     // Array uzunluğu (Type::Arr için gerekli)
     array_len: Option<usize>,
 }
 
-// YENİ: Veri segmentindeki farklı öğeleri temsil etmek için.
+// Veri segmentindeki farklı öğeleri temsil etmek için.
 #[derive(Debug, Clone)]
 enum DataItem {
     String(String),
@@ -27,10 +27,10 @@ enum DataItem {
 
 pub struct Codegen<'a, 'b> {
     pub program: &'a [Decl], // Reference to the whole program AST
-    pub type_checker: &'b mut TypeChecker<'a>, // Reference to the TypeChecker (now mutable)
+    pub type_checker: &'b mut TypeChecker<'a>, // Reference to the TypeChecker (mutable)
     pub target_platform: TargetPlatform,
     pub current_function_name: String, // Hangi fonksiyonun kodunu ürettiğimizi takip etmek için
-    // YENİ: string_literals yerine data_items kullanıyoruz.
+    // string_literals yerine data_items kullanıyoruz.
     data_items: Vec<DataItem>,
     #[allow(dead_code)] // Şimdilik kullanılmıyor, ileride kontrol akışı için kullanılacak.
     pub label_counter: usize, // Benzersiz etiketler oluşturmak için
@@ -83,10 +83,10 @@ impl<'a, 'b> Codegen<'a, 'b> {
                 DataItem::String(s) => {
                     // GAS için .asciz kullanımı (null-terminated string)
                     let escaped = s.replace("\\", "\\\\")
-                                       .replace("\"", "\\\"")
-                                       .replace("\n", "\\n")
-                                       .replace("\r", "\\r")
-                                       .replace("\x1b", "\\033"); // GAS için octal escape
+                                    .replace("\"", "\\\"")
+                                    .replace("\n", "\\n")
+                                    .replace("\r", "\\r")
+                                    .replace("\x1b", "\\033"); // GAS için octal escape
                     asm.push_str(&format!("str_{}: .asciz \"{}\"\n", i, escaped));
                 }
                 DataItem::Float64(f) => {
@@ -151,7 +151,7 @@ impl<'a, 'b> Codegen<'a, 'b> {
                     asm.push_str("    call SetConsoleMode\n");
                 }
 
-                // YENİ: Kod üretimi sırasında tip kontrolcü kapsamını da yönetiyoruz.
+                // Kod üretimi sırasında tip kontrolcü kapsamını da yönetiyoruz.
                 self.type_checker.push_scope();
 
                 // Nimble'ın özel main yapısı (argc, argv)
@@ -467,14 +467,14 @@ impl<'a, 'b> Codegen<'a, 'b> {
                                     return Err("Type::Arr sadece değişkenler için kullanılabilir.".to_string());
                                 }
                             },
-                            _ => return Err(format!("Foreach döngüsü {:?} tipi üzerinde çalışmaz. Sadece dizi veya range.", iter_type))
+                            _ => return Err(format!("For in döngüsü {:?} tipi üzerinde çalışmaz. Sadece dizi veya range.", iter_type))
                         };
                         
                         // 1. Array başlangıç adresini al
                         let array_base_loc = if let Expr::Variable(arr_var_name) = iter_expr {
                             self.variable_locations.get(arr_var_name).ok_or_else(|| format!("Dizi bulunamadı: {arr_var_name}"))?.clone()
                         } else {
-                            return Err("Foreach şimdilik sadece dizi değişkenleri üzerinde çalışıyor.".to_string());
+                            return Err("For in şimdilik sadece dizi değişkenleri üzerinde çalışıyor.".to_string());
                         };
 
                         let start_label = self.generate_label("L_for_arr_start");
@@ -541,7 +541,7 @@ impl<'a, 'b> Codegen<'a, 'b> {
                     }
                 } else if let Some(init) = initializer {
                     // Nim Style for: for (i=0, i<10, i++)
-                    // YENİ: Eğer başlatıcı sadece bir değişken ismiyse (i), onu 0'a init edelim.
+                    // Eğer başlatıcı sadece bir değişken ismiyse (i), onu 0'a init edelim.
                     if let Stmt::ExprStmt(Expr::Variable(name)) = init.as_ref() {
                         let loc = self.variable_locations.get(name).ok_or_else(|| format!("Döngü değişkeni bulunamadı: {name}"))?;
                         code.push_str("    xor rax, rax\n");
@@ -591,12 +591,12 @@ impl<'a, 'b> Codegen<'a, 'b> {
         label
     }
 
-    // YENİ: Echo çağrısı üretir.
+    // Echo çağrısı üretir.
     fn generate_echo_call(&mut self, expr: &Expr) -> Result<String, String> {
         self.generate_print_op(expr, None, false)
     }
 
-    // YENİ: Genel print operasyonu (print, println, echo için)
+    // Genel print operasyonu (print, println, echo için)
     fn generate_print_op(&mut self, expr: &Expr, style_expr: Option<&Expr>, newline: bool) -> Result<String, String> {
         let mut code = String::new();
         
@@ -690,7 +690,7 @@ impl<'a, 'b> Codegen<'a, 'b> {
         match ty {
             Type::Str(_) => "%s",
             Type::Char => "%c",
-            t if t.is_float() => "%f",
+            t if t.is_float() => "%f", // float sting olarak gösteriliyor o yüzden %s, ama bu kezde var olmayan döngüye giriyor.. özellikle echo içerisinde  işlem yapılırken.
             _ => "%d",
         }
     }
@@ -703,14 +703,22 @@ impl<'a, 'b> Codegen<'a, 'b> {
         let arg_int_regs = ["rcx", "rdx", "r8", "r9"];
         let arg_float_regs = ["xmm0", "xmm1", "xmm2", "xmm3"];
 
-        // 1. AŞAMA: Değerlendirme ve Stack'e Kaydetme
+        // 1. AŞAMA: Hesaplama ve Stack'e Doğru Register'dan Kaydetme
         let mut temp_stack_offsets = Vec::new();
-        for (_, arg_gen_code) in &args_to_pass {
-            code.push_str(arg_gen_code);
+        for (ty, arg_gen_code) in &args_to_pass {
+            code.push_str(arg_gen_code); // Hesaplama kodunu bas (Sonuç RAX veya XMM0'da)
+            
             self.stack_pointer += 8;
             let offset = self.stack_pointer;
             temp_stack_offsets.push(offset);
-            code.push_str(&format!("    mov [rbp - {}], rax\n", offset));
+
+            if ty.is_float() {
+                // Float ise XMM0'daki 64-bit değeri stack'e kopyala
+                code.push_str(&format!("    movq qword ptr [rbp - {}], xmm0\n", offset));
+            } else {
+                // Int ise RAX'ı kopyala
+                code.push_str(&format!("    mov qword ptr [rbp - {}], rax\n", offset));
+            }
         }
 
         // 2. AŞAMA: Argümanları Yerleştirme
@@ -744,13 +752,20 @@ impl<'a, 'b> Codegen<'a, 'b> {
             }
         }
 
-        // 3. ÇAĞRI
+        // 3. ÇAĞRI (Windows x64 için düzeltilmiş)
         if self.target_platform == TargetPlatform::Windows {
-            code.push_str("    sub rsp, 40      # Shadow space + Alignment\n");
+            // Toplam gereken alan: 32 (Shadow) + Ekstra Argümanlar (stack_args_pushed * 8)
+            // Bunu 16 byte hizasına uydurmalıyız. 
+            let extra_space = stack_args_pushed * 8;
+            let total_sub = 32 + extra_space;
+            
+            // Hizalama Kontrolü: Eğer total_sub 16'nın katı değilse, 8 byte daha ekle (Padding)
+            let padding = if (total_sub + 8) % 16 != 0 { 0 } else { 8 }; // +8 call dönüş adresinden gelir
+            let final_sub = total_sub + padding;
+
+            code.push_str(&format!("    sub rsp, {}      # Shadow + Args + Alignment\n", final_sub));
             code.push_str("    call _print\n");
-            code.push_str(&format!("    add rsp, {}      # Cleanup\n", 40 + (stack_args_pushed * 8)));
-        } else {
-            code.push_str("    call _print\n");
+            code.push_str(&format!("    add rsp, {}      # Cleanup\n", final_sub));
         }
 
         self.stack_pointer -= (temp_stack_offsets.len() * 8) as i32;
@@ -773,7 +788,7 @@ impl<'a, 'b> Codegen<'a, 'b> {
                 // Değeri data_items'a ekle ve indeksini al.
                 let float_index = self.add_data_item(DataItem::Float64(*val));
                 // Etiketi indekse göre oluştur ve değeri yükle.
-                Ok(format!("    movsd xmm0, [float_{}]\n", float_index))
+                Ok(format!("    movsd xmm0, [float_{}]\n", float_index)) // burada etiketleri float_float_index olarak kaydediyoruz. Ama aşağıda name olarak ele alınıyor.!!
             }
             Expr::Literal(LiteralValue::Str(s)) => {
                 let str_index = self.add_string_literal(s.clone());
@@ -819,8 +834,10 @@ impl<'a, 'b> Codegen<'a, 'b> {
                 if left_type.is_float() || right_type.is_float() { // f32, f64, f80, f128
                     // Kayan noktalı sayı aritmetiği (XMM register'ları kullanılır)
                     // 1. Sağ tarafı değerlendir ve stack'e sakla (XMM registerlarını korumak için)
+                    
                     code.push_str(&self.generate_expr(right)?);
-                    code.push_str("    sub rsp, 8\n    movsd [rsp], xmm0\n");
+                    code.push_str("    sub rsp, 8\n    movsd [rsp], xmm0\n"); 
+                    //
 
                     // 2. Sol tarafı değerlendir.
                     code.push_str(&self.generate_expr(left)?);
@@ -832,7 +849,7 @@ impl<'a, 'b> Codegen<'a, 'b> {
                         BinOp::Sub => code.push_str("    subsd xmm0, xmm1\n"),
                         BinOp::Mul => code.push_str("    mulsd xmm0, xmm1\n"),
                         BinOp::Div => code.push_str("    divsd xmm0, xmm1\n"),
-                        BinOp::Mod => return Err("Kayan noktalı sayılar için '%' operatörü desteklenmiyor.".to_string()),
+                        BinOp::Mod => return Err("Kayan noktalı sayılar için '%' mod operatörü desteklenmiyor.".to_string()),
                         _ => return Err(format!("Desteklenmeyen ikili operatör (float): {:?}. Sadece +, -, *, / desteklenir.", op)),
                     }
                     self.type_checker.pop_scope()?;
@@ -1258,7 +1275,7 @@ impl<'a, 'b> Codegen<'a, 'b> {
         }
     }
 
-    // YENİ: String literal'ini kaydeder ve indeksini döndürür
+    // String literal'ini kaydeder ve indeksini döndürür
     fn add_string_literal(&mut self, s: String) -> usize {
         // Sadece stringleri kontrol et
         if let Some(pos) = self.data_items.iter().position(|item| matches!(item, DataItem::String(existing_s) if existing_s == &s)) {
@@ -1269,14 +1286,14 @@ impl<'a, 'b> Codegen<'a, 'b> {
         }
     }
 
-    // YENİ: Genel bir veri öğesi ekler ve indeksini döndürür.
+    // Genel bir veri öğesi ekler ve indeksini döndürür.
     fn add_data_item(&mut self, item: DataItem) -> usize {
         self.data_items.push(item);
         self.data_items.len() - 1
     }
 
 
-    // YENİ: Struct üyesinin ofsetini hesaplar (Her alan 8 byte varsayılıyor)
+    // Struct üyesinin ofsetini hesaplar (Her alan 8 byte varsayılıyor)
     fn get_struct_member_offset(&self, struct_name: &str, member_name: &str) -> Result<i32, String> {
         for decl in self.program {
             if let Decl::Struct { name, fields, .. } = decl {
@@ -1295,7 +1312,7 @@ impl<'a, 'b> Codegen<'a, 'b> {
         Err(format!("Hata: '{}' struct'ı tanımlanmamış.", struct_name))
     }
 
-    // YENİ: Struct üyesinin tipini döndürür
+    // Struct üyesinin tipini döndürür
     fn get_struct_member_type(&self, struct_name: &str, member_name: &str) -> Result<Type, String> {
         for decl in self.program {
             if let Decl::Struct { name, fields, .. } = decl {
@@ -1311,7 +1328,7 @@ impl<'a, 'b> Codegen<'a, 'b> {
         Err(format!("Hata: '{}' üye tipi bulunamadı.", member_name))
     }
 
-    // YENİ: Dahili yardımcı rutinleri oluşturur
+    // Dahili yardımcı rutinleri oluşturur
     fn generate_builtins_library(&self) -> String {
         let mut lib = String::new();
         lib.push_str("\n# --- Built-in Helpers ---\n");
@@ -1340,7 +1357,7 @@ impl<'a, 'b> Codegen<'a, 'b> {
         lib.push_str(".Litoa_done:\n    mov rax, r11\n    ret\n\n");
         
         
-        // _ftoa: xmm0 = float -> rax = string pointer
+        // _ftoa: xmm0 = float -> rax = string pointer //dönüşüm problemli .
         // C standard library sprintf kullanarak float dönüşümü
         lib.push_str("_ftoa:\n");
         lib.push_str("    sub rsp, 48\n"); // Shadow space (32) + alignment
