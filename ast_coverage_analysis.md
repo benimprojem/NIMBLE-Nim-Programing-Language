@@ -53,7 +53,7 @@
 
 | Tip | Durum | Öncelik | Açıklama |
 |-----|-------|---------|----------|
-| `Never` | ❌❌❌❌ | 🔴 YÜKSEK | `panic`, [exit](file:///c:/Users/Asus/Desktop/Nimble/src/codegen.rs#224-239) için kritik |
+| `Never` | ❌❌❌❌ | 🔴 YÜKSEK | `panic`, [exit] için kritik |
 | `Tuple(Vec<Type>)` | ❌❌❌❌ | 🟡 ORTA | Tuple literal parser'da var ama tip kontrolü yok |
 | `ArrayLiteral(Vec<Type>)` | ❌⚠️⚠️❌ | 🟢 DÜŞÜK | Geçici tip, Array'e dönüşüyor |
 | `Fn(Vec<Type>, Box<Type>)` | ❌❌❌❌ | 🔴 YÜKSEK | Lambda/First-class fonksiyonlar için |
@@ -75,7 +75,7 @@
 | `Sub (-)` | ✅ | ✅ | ✅ | ✅ | `sub rax, rbx` / `subsd xmm0, xmm1` |
 | `Mul (*)` | ✅ | ✅ | ✅ | ✅ | `imul rbx` / `mulsd xmm0, xmm1` |
 | `Div (/)` | ✅ | ✅ | ✅ | ✅ | `idiv rbx` / `divsd xmm0, xmm1` |
-| `Mod (%)` | ✅ | ✅ | ✅ | ✅ | Int, float :Fix |
+| `Mod (%)` | ✅ | ✅ | ✅ | ✅ | Int, float :Fix $a - (trunc(a/b) * b)$|
 | `Equal (==)` | ✅ | ✅ | ✅ | ✅ | `cmp` + `sete` |
 | `NotEqual (!=)` | ✅ | ✅ | ✅ | ✅ | `cmp` + `setne` |
 | `Greater (>)` | ✅ | ✅ | ✅ | ✅ | `cmp` + `setg` |
@@ -108,7 +108,7 @@
 | `Neg (-)` | ✅ | ✅ | ✅ | ✅ | `neg rax` / `xorpd xmm0, [sign_mask]` |
 | `Not (!)` | ✅ | ✅ | ✅ | ✅ | `test rax, rax` + `setz` |
 | `PostInc (x++)` | ✅ | ✅ | ✅ | ✅ | `mov`, `inc`, `mov` sequence |
-| `PostDec (x--)` | ✅ | ✅ | ✅ | ✅ | `mov`, [dec](file:///c:/Users/Asus/Desktop/Nimble/src/parser.rs#460-552), `mov` sequence |
+| `PostDec (x--)` | ✅ | ✅ | ✅ | ✅ | `mov`, [dec], `mov` sequence |
 
 ### ⚠️ KISMİ İŞLENMİŞ (2/11)
 
@@ -134,14 +134,14 @@
 | Expression | Parser | TypeChecker | Codegen | Notlar |
 |------------|--------|-------------|---------|--------|
 | `Literal(Int/Float/Str/Bool/Char)` | ✅ | ✅ | ✅ | Tüm literaller çalışıyor |
-| [Variable(String)](file:///c:/Users/Asus/Desktop/Nimble/src/codegen.rs#12-18) | ✅ | ✅ | ✅ | Stack offset ile erişim |
+| [Variable(String)] | ✅ | ✅ | ✅ | Stack offset ile erişim |
 | `Binary { left, op, right }` | ✅ | ✅ | ✅ | Aritmetik ve karşılaştırma |
 | `Unary { op, right }` | ✅ | ✅ | ⚠️ | Bazı operatörler eksik |
 | `Assign { left, value }` | ✅ | ✅ | ✅ | Değişken ataması |
 | `Call { callee, args }` | ✅ | ✅ | ✅ | Fonksiyon çağrısı (Windows x64 ABI) |
 | `InterpolatedString(Vec<Expr>)` | ✅ | ✅ | ✅ | String interpolation |
 | `Range { start, end }` | ✅ | ✅ | ✅ | For döngüleri için |
-| `ArrayLiteral(Vec<Expr>)` | ✅ | ✅ | ✅ | **YENİ** - Az önce eklendi |
+| `ArrayLiteral(Vec<Expr>)` | ✅ | ✅ | ✅ | **YENİ** |
 | `ArrayAccess { name, index }` | ✅ | ✅ | ✅ | Dizi erişimi |
 | `MemberAccess { object, member }` | ✅ | ✅ | ⚠️ | Struct için, codegen kısmi |
 
@@ -241,9 +241,10 @@
 
 ### 🔴 YÜKSEK ÖNCELİK (Derleyici Temel İşlevselliği)
 
-1. **`Never` Tipi** - `panic`, [exit](file:///c:/Users/Asus/Desktop/Nimble/src/codegen.rs#224-239) için kritik
+1. **`Never` Tipi** - `panic`, [exit] için kritik
 2. **`Result<T, E>` Tipi** - Hata yönetimi için zorunlu
 3. **`Try (expr?)` İfadesi** - Hata yönetimi için
+3.1**`(true fn)<- <ret fn> ?-> fn (err)` - Ternary kontrole benzer başarılı ise sola, başarısız ise sağa kayar kontrol
 4. **`Fn(Vec<Type>, Box<Type>)` Tipi** - Lambda/First-class fonksiyonlar
 5. **`StructLiteral` İfadesi** - Struct oluşturma eksik
 6. **`AddressOf (&)` ve `Deref (*)` Operatörleri** - İşaretçi semantiği
@@ -268,8 +269,9 @@
 3. **`Bit`, `Byte` Tip Kontrolü** - Düşük seviye veri
 4. **`SizeOf` Operatörü** - Bellek boyutu hesaplama
 5. **`Rolling` Mekanizması** - NIMBLE'a özel
-6. **[Group](file:///c:/Users/Asus/Desktop/Nimble/src/type_checker.rs#16-22) Tam Desteği** - NIMBLE'a özel
+6. **[Group] Tam Desteği** - NIMBLE'a özel
 7. **`Routine` Semantiği** - Belirsiz, spec gerekli
+8. **`(true fn)<- <fn> ?-> fn (err)` - NIMBLE'a özel
 
 ---
 
@@ -369,4 +371,4 @@ Her faz sonunda:
 
 ---
 
-**Rapor Sonu** - Detaylı analiz tamamlandı. İlerleme planı hazır.
+**Rapor Sonu**

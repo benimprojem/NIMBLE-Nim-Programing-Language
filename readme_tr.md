@@ -57,26 +57,29 @@ NIMBLE, kontrolü geliştiriciye veren ancak modern kolaylıkları da sunan hibr
 
 NIMBLE, statik tipli bir dildir ancak `any` tipi ile dinamikliği destekler.
 
-### 3.1 Tanımlayıcılar (`var`, `let`, `must`, `const`)
+### 3.1 Tanımlayıcılar (``, `let`, `must`, `const`)
 
-*   **`var`**: Değiştirilebilir (mutable) değişken.
+*   **`var_name`**: Değiştirilebilir (mutable) değişken.
     ```nim
-    var sayac: i32 = 0;
+    sayac: i32 = 0;
     sayac = 1; // Geçerli
     ```
+    
 *   **`let`**: Değiştirilemez (immutable) sabit. (Varsayılan olarak).
     ```nim
     let pi: f32 = 3.14;
     // pi = 3.15; // HATA!
     ```
-*   **`mut let`**: Değiştirilebilir `let` ( `var` ile benzerdir, stil tercihidir).
-*   **`must`**: Derleme zamanında (compile-time) kesinlikle hesaplanması veya mevcut olması gereken değerler için (Assertion gibi).
-    ```nim
-    must var config = load_config(); // Yüklenemezse derleme durur.
-    ```
+*   **`mut let`**: Değiştirilebilir `let`.
+
 *   **`const`**: Derleme zamanı sabiti (Compile-time constant).
     ```nim
     const SURUM = "1.0.0";
+    ```
+    
+*   **`must`**: Derleme zamanında (compile-time) kesinlikle hesaplanması veya mevcut olması gereken değerler için (Assertion gibi).
+    ```nim
+    must  config = load_config(); // Yüklenemezse derleme durur.
     ```
 
 ### 3.2 Temel Tamsayı Tipleri (Integers)
@@ -111,7 +114,7 @@ Para birimi hesaplamalarında yuvarlama hatası olmaması için kullanılır.
 ### 3.5 Özel Donanım ve Sistem Tipleri
 *   **`bit`**: Sadece 1-bit alan kaplar (`0` veya `1`). Boolean yerine donanım bayrakları için.
 *   **`byte`**: `u8` için bir takma addır (alias).
-*   **`hex`**: Onaltılık (Hexadecimal) veri literali. `var adres: hex = 0xFF1A;`
+*   **`hex`**: Onaltılık (Hexadecimal) veri literali. ` adres: hex = 0xFF1A;`
 *   **`ptr`**: Tipi belirsiz ham bellek işaretçisi (`void*` karşılığı).
 *   **`any`**: Dinamik tip. Çalışma zamanında her türlü veriyi tutabilir.
 
@@ -130,11 +133,11 @@ NIMBLE'da diziler değişken:arr = [1,2,3] yada köşeli parantez `[]` ile tanı
 Stack belleğinde tutulur. Boyut derleme zamanında bilinmelidir.
 
 ```nim
-var sayilarim:arr = [1, 2, üç, 4.4, 0XEFF2];
+ sayilarim:arr = [1, 2, üç, 4.4, 0XEFF2];
 
-var sayilar[5]: i32 = [1, 2, 3, 4, 5];
+ sayilar[5]: i32 = [1, 2, 3, 4, 5];
 
-var matris[3][3]: i32 = [
+ matris[3][3]: i32 = [
     [1, 0, 0],
     [0, 1, 0],
     [0, 0, 1]
@@ -145,7 +148,7 @@ var matris[3][3]: i32 = [
 Heap belleğinde tutulur. `T[]` sözdizimi kullanılır.
 
 ```nim
-var liste: i32[] = [10, 20, 30];
+liste: i32[] = [10, 20, 30];
 liste.push(40); // Sona ekle
 ```
 
@@ -157,11 +160,11 @@ liste.push(40); // Sona ekle
 Anahtar-Değer (Key-Value) çiftlerini tutar. `map<AnahtarTipi, DegerTipi>`
 
 ```nim
-var notlar: map<str, i32>;
+notlar: map<str, i32>;
 notlar["Ali"] = 90;
 notlar["Veli"] = 85;
 
-var notu: i32 = notlar["Ali"]; // 90
+ notu: i32 = notlar["Ali"]; // 90
 ```
 
 ### 4.3 Matematiksel Vektörler
@@ -172,9 +175,9 @@ Oyun ve grafik programlama için SIMD destekli tipler.
 *   `Vec4`: `[x, y, z, w]`
 
 ```nim
-var v1 = Vec3[1.0, 2.0, 3.0];
-var v2 = Vec3[4.0, 5.0, 6.0];
-var sonuc = v1 + v2; // [5.0, 7.0, 9.0] otomatik toplanır.
+ v1 = Vec3[1.0, 2.0, 3.0];
+ v2 = Vec3[4.0, 5.0, 6.0];
+ sonuc = v1 + v2; // [5.0, 7.0, 9.0] otomatik toplanır.
 ```
 
 ---
@@ -196,8 +199,8 @@ var sonuc = v1 + v2; // [5.0, 7.0, 9.0] otomatik toplanır.
 
 *   **İkili Operatörler (Binary Operators):**
     *   `.=` : String birleştirme operatörü. Mevcut string'e yeni string ekler.
-            ```nim
-            var a: str = "";
+            ```
+             a: str = "";
             a .= "Bugün hava";
             a .= " bulutlu";
             a .= " sıcaklık 16 derece.";
@@ -213,18 +216,18 @@ var sonuc = v1 + v2; // [5.0, 7.0, 9.0] otomatik toplanır.
 
 tek satır kod if
 ```nim
-var x = 10;
+ x = 10;
 if (x > 100) print("Büyük");
 ```
 tek satır kod if else
 ```nim
-var x = 10;
+ x = 10;
 if (x > 100) println("Büyük");
 else println("Küçük");
 ```
 
 ```nim
-var x = 10;
+ x = 10;
 if (x > 100) {
     print("Büyük");
 } elseif (x == 10) {
@@ -259,7 +262,7 @@ match (sayi) {
 **3. İfade Olarak (Expression Match):**
 Sonucu bir değişkene atama. **Not:** Expression match kullanımında sonundaki noktalı virgül isteğe bağlıdır.
 ```nim
-var mesaj = match (kod) {
+ mesaj = match (kod) {
     200 => "Başarılı",
     404 => "Bulunamadı",
     500 => "Sunucu Hatası",
@@ -270,11 +273,23 @@ var mesaj = match (kod) {
 **4. `Result` ve `Option` Tipleri ile:**
 Hata yönetiminde kullanılır.
 ```nim
-var dosya = file.open("test.txt", file.READ);
-match (dosya) {
-    Ok(h) => h.read_all(), // h: FileHandle
-    Err(e) => echo("Hata: {e}")
-}
+        match (file.open("not.txt", file.w)) {
+            Ok(h) => {
+                file.write(h, "Test verisi");
+                file.close(h);
+            },
+            Err(e) =>
+        }
+        
+        // yukarıdaki match ile aynı işlemi yapar.
+        // Ternary kontrole benzer başarılı ise sola, başarısız ise sağa kayar kontrol.
+        (true fn)-> <ret fn> ?-> (false fn err )
+        
+        (h)<- file.open("not.txt", file.w)?-> eprint("Hata: {e}");//hata durumunda(false,null,none,unknown) buradaki kod(lar) çalışır.
+        (h)-> {
+            file.write(h, "Test verisi");
+            file.close(h);
+        }
 ```
 
 ### 6.3 Döngüler
@@ -300,7 +315,7 @@ for (i in 0..10) {
 
 **3. Koleksiyon Döngüsü (Foreach):**
 ```nim
-var isimler = ["Ali", "Veli"];
+ isimler = ["Ali", "Veli"];
 for (isim in isimler) {
     echo(isim);
 }
@@ -332,7 +347,7 @@ BAGLANTI:{
     
     echo("Bağlanmaya çalışılıyor... Deneme: {$rolling}");
     
-    var conn = network.connect("sunucu.com");
+     conn = network.connect("sunucu.com");
     
     if (conn.hata && $rolling <= 4) {
         time.sleep(1000); // 1 saniye bekle
@@ -352,7 +367,7 @@ BAGLANTI:{
 ### 7.1 Tanımlama Biçimleri
 
 **Standart Tanım:**
-```nim
+```
 fn topla(a: i32, b: i32): i32 {
     return a + b;
 }
@@ -360,7 +375,7 @@ fn topla(a: i32, b: i32): i32 {
 
 **Void Fonksiyon (Prosedür):**
 Dönüş tipi belirtilmezse `void` kabul edilir.
-```nim
+```
 fn selamla(isim: str) {
     print("Merhaba {isim}");
 }
@@ -368,14 +383,14 @@ fn selamla(isim: str) {
 
 **Expression Body (Tek Satır):**
 Süslü parantez yerine `->` kullanılır.
-```nim
+```
 fn kare(x: i32) -> x * x;
 ```
 
 **Lamda:**
 anonim fonksiyon isimsiz fonksiyonlar:  fn (...) -> ...;
-```nim
-var kare:i32 = fn (x: i32) -> x * x;
+```
+ kare:i32 = fn (x: i32) -> x * x;
 ```
 
 
@@ -430,8 +445,8 @@ export group http { ... }
 Varsayılan olarak her şey **gizlidir (private)**. Dışarı açmak için `export` veya `pub` kullanılır.
 
 ```nim
-var gizli: i32 = 0;
-export var acik: i32 = 1;
+ gizli: i32 = 0;
+export  acik: i32 = 1;
 
 export fn genel_fonk() { ... }
 ```
@@ -488,7 +503,7 @@ group Oyuncu {
     }
 
     // Nesne Metodu
-    // İlk parametre 'self' olmak zorundadır. Tipi (Oyuncu) belirtilmez (infer edilir).
+    // İlk parametre 'self' olmak zorundadır, tüm yapıları tek tek yazmaktan kurtarır. Tipi (Oyuncu) belirtilmez (infer edilir).
     puan_arttir => fn(self, miktar: i32) {
         self.puan = self.puan + miktar;
     }
@@ -498,7 +513,7 @@ group Oyuncu {
 }
 
 // Kullanım:
-var o1 = Oyuncu.yeni("Ahmet");
+ o1 = Oyuncu.yeni("Ahmet");
 o1.puan_arttir(10);
 print(o1.isim_getir()); // Ahmet
 ```
@@ -516,7 +531,7 @@ NIMBLE normalde otomatik bellek yönetimi kullanır. Ancak `memory` modülü ile
 use memory;
 
 // 1024 byte yer ayır
-var ptr = memory.alloc(1024);
+ ptr = memory.alloc(1024);
 
 // Belleği kullan (unsafe)
 memory.set(ptr, 0, 1024); // Sıfırla
@@ -526,7 +541,7 @@ memory.free(ptr);
 
 // Veri Okuma/Yazma (Dereferencing)
 memory.write<i32>(ptr, 0, 100);      // ptr[0] = 100
-var val = memory.read<i32>(ptr, 0);  // val = ptr[0]
+ val = memory.read<i32>(ptr, 0);  // val = ptr[0]
 
 // Blok İşlemleri
 memory.copy(src_ptr, dest_ptr, 1024); // memcpy
@@ -552,9 +567,9 @@ Inline Assembly kodları için CPU register kontrolü.
 fn Calc():void {
 	// agressif optimizasyon uygulanır.
 	fastexec {
-		var a:i32 = 10;
-		var b:i32 = 20;
-		var total:i32;
+		 a:i32 = 10;
+		 b:i32 = 20;
+		 total:i32;
 		// asm blockları fastexec kapsamında değil ise hata üretilir.
         // asm blokları başka asm bloklara, asm nin normal etiket çağrıları gibi çağrı yapabilir.
 		asm: CRITICAL_ADD { 
@@ -587,18 +602,18 @@ Bu modül, çekirdekler, registerlar (kaydediciler) ve düşük seviyeli işlemc
 fn LowLevelOp() {
     fastexec {
         // Çekirdek sayısını al
-        var cores = cpu.core_count();
+         cores = cpu.core_count();
         
         // Hassas zaman ölçümü (Cycle cinsinden)
-        var start = cpu.rdtsc();
+         start = cpu.rdtsc();
         
         asm: ISLEM {
             mov rax, 100
             // ...
         }
         
-        var end = cpu.rdtsc();
-        var cycles = end - start;
+         end = cpu.rdtsc();
+         cycles = end - start;
         
         // Spin-wait döngüsü örneği
         while (mesgul_mu) {
@@ -627,22 +642,22 @@ Bu bölüm, NIMBLE standart kütüphanesindeki modüllerin tam listesidir.
 
 **Örnek:**
 ```nim
-var ad = io.prompt("Adınız: ");
-io.println("Merhaba {ad}");
+ ad = io.prompt("Adınız: ");
+println("Merhaba {ad}");
 
-// ULTRA Styling System (Renkli Çıktı)
+// Styling System (Renkli Çıktı)
 // 1. Stil Tanımlama (Global Kapsamda yapılmalıdır)
 style Dikkat = "\033[31;1m"; // Kırmızı ve Kalın
 style Bilgi  = "\033[36m";    // Cyan
 
 // 2. Kullanım (İkinci parametre olarak stil adı veya ANSI kodu verilir)
-io.println("Bu kritik bir hatadır!", "Dikkat");
-io.println("İşlem tamamlandı.", "Bilgi");
-io.println("Doğrudan ANSI kodu.", "\033[32m"); // Yeşil
-io.println("Normal yazı.");
+println("Bu kritik bir hatadır!", "Dikkat");
+println("İşlem tamamlandı.", "Bilgi");
+println("Doğrudan ANSI kodu.", "\033[32m"); // Yeşil
+println("Normal yazı.");
 
 // Yerleşik Stiller: "error", "warn", "info", "success"
-io.println("Başarılı!", "success");
+println("Başarılı!", "success");
 ```
 
 ### 11.2 `string` Modülü
@@ -661,8 +676,8 @@ io.println("Başarılı!", "success");
 
 **Örnek:**
 ```nim
-var s = "  merhaba dünya  ";
-var temiz = s.trim().to_upper(); // "MERHABA DÜNYA"
+ s = "  merhaba dünya  ";
+ temiz = s.trim().to_upper(); // "MERHABA DÜNYA"
 if temiz.contains("DÜNYA") { ... }
 ```
 
@@ -683,7 +698,7 @@ if temiz.contains("DÜNYA") { ... }
 
 **Örnek:**
 ```nim
-var sayilar: i32[] = [3, 1, 4];
+ sayilar: i32[] = [3, 1, 4];
 sayilar.sort(); // [1, 3, 4]
 sayilar.push(2);
 sayilar.reverse(); // [2, 4, 3, 1]
@@ -704,9 +719,9 @@ sayilar.newcap(10); // [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 **Örnek:**
 ```nim
-var yaricap = 5.0;
-var alan = math.PI * math.pow(yaricap, 2.0);
-var aci_rad = math.deg_to_rad(45.0);
+ yaricap = 5.0;
+ alan = math.PI * math.pow(yaricap, 2.0);
+ aci_rad = math.deg_to_rad(45.0);
 ```
 
 ### 11.5 `file` Modülü
@@ -728,7 +743,7 @@ match (file.open("not.txt", file.w)) {
         file.write(h, "Test verisi");
         file.close(h);
     },
-    Err(e) => io.eprint("Hata: {e}")
+    Err(e) => eprint("Hata: {e}")
 }
 ```
 
@@ -745,7 +760,7 @@ Bu modül, tüm ağ operasyonlarını üç ana grup altında toplar.
 
 **Örnek (İstemci):**
 ```nim
-var cevap = net.http.get("https://api.ornek.com/veri");
+ cevap = net.http.get("https://api.ornek.com/veri");
 if cevap.is_ok() {
     echo(cevap.unwrap().body);
 }
@@ -773,7 +788,7 @@ net.http.server(8080, fn(req) {
 
 **Örnek (Raw Socket):**
 ```nim
-var s = net.socket.create(net.TCP);
+ s = net.socket.create(net.TCP);
 net.socket.connect(s, "127.0.0.1", 9000);
 net.socket.send(s, "Ping");
 ```
@@ -784,7 +799,7 @@ net.socket.send(s, "Ping");
 *   `listen(port, handler)`: Hızlı sunucu.
 
 ```nim
-var stream = net.tcp.connect("google.com", 80);
+ stream = net.tcp.connect("google.com", 80);
 stream.write("GET / HTTP/1.1\r\n\r\n");
 ```
 
@@ -802,7 +817,7 @@ Veritabanı işlemleri için `sqlite` ve `nosql` gruplarını içerir.
 
 **Örnek:**
 ```nim
-var con = db.sqlite.connect("kullanicilar.db");
+ con = db.sqlite.connect("kullanicilar.db");
 
 // Tablo oluştur
 db.sqlite.exec(con, "CREATE TABLE IF NOT EXISTS user (id INT, name TEXT)");
@@ -811,7 +826,7 @@ db.sqlite.exec(con, "CREATE TABLE IF NOT EXISTS user (id INT, name TEXT)");
 db.sqlite.exec(con, "INSERT INTO user VALUES (1, 'Ahmet')");
 
 // Sorgula
-var satirlar = db.sqlite.query(con, "SELECT * FROM user");
+ satirlar = db.sqlite.query(con, "SELECT * FROM user");
 for (satir in satirlar) {
     echo("Kullanıcı: {satir['name']}");
 }
@@ -830,11 +845,11 @@ Basit, gömülü (embedded) bir KV (Key-Value) veritabanı.
 
 **Örnek:**
 ```nim
-var store = db.nosql.open("cache.dat");
+ store = db.nosql.open("cache.dat");
 
 db.nosql.set(store, "session_123", "{user_id: 5}");
 
-var val = db.nosql.get(store, "session_123");
+ val = db.nosql.get(store, "session_123");
 if val.is_some() {
     echo("Oturum Verisi: {val.unwrap()}");
 }
@@ -852,8 +867,8 @@ if val.is_some() {
 
 **Örnek:**
 ```nim
-var dosyalar = os.execute("ls -la");
-var kullanici = os.get_env("USER").unwrap_or("Misafir");
+ dosyalar = os.execute("ls -la");
+ kullanici = os.get_env("USER").unwrap_or("Misafir");
 ```
 
 ### 11.9 `crypto` Modülü
@@ -867,7 +882,7 @@ var kullanici = os.get_env("USER").unwrap_or("Misafir");
 
 **Örnek:**
 ```nim
-var sifre_hash = crypto.hash(crypto.SHA256, "gizlisifre123");
+ sifre_hash = crypto.hash(crypto.SHA256, "gizlisifre123");
 print("Hash: {sifre_hash}");
 ```
 
@@ -882,9 +897,9 @@ print("Hash: {sifre_hash}");
 
 **Örnek:**
 ```nim
-var basla = time.start();
+ basla = time.start();
 time.sleep(500); // 500ms uyu
-var sure = time.end(basla);
+ sure = time.end(basla);
 echo("Geçen süre: {sure}");
 ```
 
@@ -899,8 +914,8 @@ echo("Geçen süre: {sure}");
 
 **Örnek:**
 ```nim
-var rng = rand.new_rng();
-var zar = rand.range_i32(rng, 1, 7); // 1-6
+ rng = rand.new_rng();
+ zar = rand.range_i32(rng, 1, 7); // 1-6
 ```
 
 ### 11.12 `regex` Modülü
@@ -913,8 +928,8 @@ var zar = rand.range_i32(rng, 1, 7); // 1-6
 
 **Örnek:**
 ```nim
-var re = regex.compile("\\d+"); // Sayıları bul
-var sonuc = re.find("Sipariş No: 12345");
+ re = regex.compile("\\d+"); // Sayıları bul
+ sonuc = re.find("Sipariş No: 12345");
 if sonuc.is_some() {
     echo("Numara: {sonuc.text()}"); // 12345
 }
@@ -929,8 +944,8 @@ if sonuc.is_some() {
 
 **Örnek:**
 ```nim
-var veri = json.parse("{\"id\": 1, \"aktif\": true}").unwrap();
-var id = veri.get("id").as_i32().unwrap();
+ veri = json.parse("{\"id\": 1, \"aktif\": true}").unwrap();
+ id = veri.get("id").as_i32().unwrap();
 ```
 
 ### 11.14 `log` Modülü
@@ -962,7 +977,7 @@ Ekran kartı üzerinde paralel çalışacak fonksiyonlar.
 
 gpu fn piksel_is(veri: u8[]) {
     // GPU kodu...
-    var id:u8 = 0;
+     id:u8 = 0;
     select_device(id);
 }
 ```
@@ -1018,14 +1033,14 @@ extern fn sqrt(x: f64): f64;
 
 **Örnek:**
 ```nim
-var s:str = "123";
+ s:str = "123";
 if types.is_type<str>(s) {
-    var num = types.parse<i32>(s).unwrap();
+     num = types.parse<i32>(s).unwrap();
 }
 
 // Bitwise dönüşüm (float -> int bitleri)
-var f:f32 = 1.0;
-var bits = types.cast<i32>(f);
+ f:f32 = 1.0;
+ bits = types.cast<i32>(f);
 ```
 
 ### 11.20 `generics` (Jenerikler)
@@ -1035,7 +1050,7 @@ Dilin çekirdek özelliğidir. `<T>` sözdizimi ile kullanılır.
 fn kutu_yap<T>(deger: T) { ... }
 ```
 
-### 11.21 `linalg` Modülü (Lineer Cebir & Vektör)
+### 11.21 `vector` Modülü (Lineer Cebir & Vektör)
 **Açıklama:** Oyun, fizik ve grafik programlama için Vektör ve Matris aritmetiği. `Vec2`, `Vec3`, `Vec4` tipleri üzerinde çalışır.
 
 *   `dot(v1, v2)`: Nokta çarpımı (Skaler sonuç).
@@ -1048,8 +1063,8 @@ fn kutu_yap<T>(deger: T) { ... }
 
 **Örnek:**
 ```nim
-var v = Vec3[0, 1, 0];
-var yon = linalg.rotate(v, Vec3[0, 0, 1], 90.0);
+ v = Vec3[0, 1, 0];
+ yon = vector.rotate(v, Vec3[0, 0, 1], 90.0);
 ```
 
 ### 11.22 `collections` Modülü (Gelişmiş Veri Yapıları)
@@ -1062,9 +1077,9 @@ var yon = linalg.rotate(v, Vec3[0, 0, 1], 90.0);
 
 **Örnek:**
 ```nim
-var küme = collections.Set<i32>();
+ küme = collections.Set<i32>();
 küme.add(1);
-küme.add(1); // Eklenmez (Zaten var)
+küme.add(1); // Eklenmez (Zaten )
 ```
 
 ### 11.23 `path` Modülü (Dosya Yolu İşlemleri)( bunu file modülü ile birleştir.)
@@ -1078,7 +1093,7 @@ küme.add(1); // Eklenmez (Zaten var)
 
 **Örnek:**
 ```nim
-var tam_yol = path.join(os.cwd(), "veri", "resim.png");
+ tam_yol = path.join(os.cwd(), "veri", "resim.png");
 ```
 
 ### 11.24 `process` Modülü (Süreç Yönetimi)
@@ -1092,7 +1107,7 @@ var tam_yol = path.join(os.cwd(), "veri", "resim.png");
 
 **Örnek:**
 ```nim
-var cikti = process.exec("git status").stdout;
+ cikti = process.exec("git status").stdout;
 echo(cikti);
 ```
 
@@ -1133,10 +1148,10 @@ fn test_toplama() {
 
 **Örnek:**
 ```nim
-var sayilar = [1, 2, 3, 4, 5];
-var kareler = data.map(sayilar, fn(x) -> x * x); // [1, 4, 9, 16, 25]
-var ciftler = data.filter(kareler, fn(x) -> x % 2 == 0); // [4, 16]
-var toplam = data.sum(ciftler); // 20
+ sayilar = [1, 2, 3, 4, 5];
+ kareler = data.map(sayilar, fn(x) -> x * x); // [1, 4, 9, 16, 25]
+ ciftler = data.filter(kareler, fn(x) -> x % 2 == 0); // [4, 16]
+ toplam = data.sum(ciftler); // 20
 ```
 
 ### 11.28 `tpu` Modülü (Tensör İşlemciler)
@@ -1160,9 +1175,9 @@ tpu fn matris_carp(a: tensor<f32>, b: tensor<f32>) {
 
 **Örnek:**
 ```nim
-var t1 = tpu.load_tensor(veri1, [1024, 1024]);
-var t2 = tpu.load_tensor(veri2, [1024, 1024]);
-var sonuc = tpu.matmul(t1, t2); // Işık hızında işlem
+ t1 = tpu.load_tensor(veri1, [1024, 1024]);
+ t2 = tpu.load_tensor(veri2, [1024, 1024]);
+ sonuc = tpu.matmul(t1, t2); // Işık hızında işlem
 ```
 
 ### 12. Modüllerden Bağımsız Yardımcı Fonksiyonlar (Built-ins)
@@ -1180,7 +1195,7 @@ Bu fonksiyonlar herhangi bir `use` bildirimi gerektirmeden her yerden doğrudan 
     ```
 *   **`input(prompt)`**: Kullanıcıdan veri almak için kullanılır. Opsiyonel bir mesaj (prompt) görüntüleyebilir. Her zaman `str` (metin) döndürür.
     ```nim
-    var ad = input("Adınız nedir?: ");
+     ad:str = input("Adınız nedir?: ");
     ```
 
 #### 12.2 Bellek ve Tip Bilgisi
@@ -1198,7 +1213,7 @@ Bu fonksiyonlar herhangi bir `use` bildirimi gerektirmeden her yerden doğrudan 
 *   **`defer(blok)`**: İçinde bulunduğu blok (scope) tamamlandığında çalıştırılacak kodu sıraya ekler. Kaynak temizliği (dosya kapatma, bellek serbest bırakma) için idealdir.
     ```nim
     {
-        var f = file.open("veri.txt", file.READ);
+         f = file.open("veri.txt", file.READ);
         defer { file.close(f); } // Blok bitince otomatik çalışır.
         // ... dosya işlemleri ...
     }
@@ -1215,7 +1230,7 @@ Modül kullanmadan hızlıca tip dönüşümü (casting) yapmak için kısa yoll
 
 *   **`int(val)` / `stri32(val)`**: Verilen değeri (özellikle string'i) tamsayıya çevirir. `input`'tan gelen veriyi matematikte kullanmak için gereklidir.
     ```nim
-    var yas = int(input("Yaşınız: ")); // veya stri32(giris)
+     yas = int(input("Yaşınız: ")); // veya stri32(giris)
     ```
 *   **`float(val)`**: Değeri ondalıklı sayıya (`f64`) çevirir.
 *   **`str(val)`**: Herhangi bir değeri metne çevirir.
@@ -1224,14 +1239,36 @@ Modül kullanmadan hızlıca tip dönüşümü (casting) yapmak için kısa yoll
 #### 12.7 Sonuç Yönetim Metotları (Result & Option)
 NIMBLE'da hata veya boş değer dönebilen fonksiyonlar `Result` veya `Option` tipi döndürür. Bu kutuların içindeki gerçek veriyi (veya hatayı) almak için bu metotlar kullanılır.
 
-*   **`val.unwrap()`**: Kutuyu açar ve **eğer başarılıysa** içindeki değeri döndürür. **Eğer hataysa (Err) veya boşsa (None)** programı `panic` ile patlatır (durdurur). Sadece %100 emin olduğunuzda kullanın.
-*   **`val.unwrap_or(default)`**: Kutu boşsa veya hatalıysa, patlamak yerine parametre olarak verilen varsayılan değeri döndürür. Güvenli olan yöntemdir.
+*   **YENİ:: kural: `(h)<- fn() ?->{(false,null,none,unknown)durumu }` oparatörü. fn() Ternary kontrole benzer başarılı ise sola, başarısız ise sağa kayar kontrol.
+    ```
+        match (file.open("not.txt", file.w)) {
+            Ok(h) => {
+                file.write(h, "Test verisi");
+                file.close(h);
+            },
+            Err(e) =>
+        }
+        
+        // yukarıdaki match ile aynı işlemi yapar.
+        // Ternary kontrole benzer başarılı ise sola, başarısız ise sağa kayar kontrol.
+        (true fn)<- <ret fn> ?-> fn (err) 
+        
+        (h)<- file.open("not.txt", file.w)?-> eprint("Hata: {e}");//hata durumunda(false,null,none,unknown) buradaki kod(lar) çalışır.
+        (h)-> {
+            file.write(h, "Test verisi");
+            file.close(h);
+        }
+
+    ```
+    
+    
+    
     ```nim
-    var sayi = types.parse<i32>("abc").unwrap_or(0); // Hata olursa 0 döner.
+     sayi:i32 = types.parse<i32>("abc").unwrap_or(0); // Hata olursa 0 döner.
     ```
 *   **`val.expect(msg)`**: `unwrap` gibidir ama hata durumunda kendi özel mesajınızla patlar. Hata ayıklamayı kolaylaştırır.
 *   **`val.is_ok()` / `val.is_err()`**: İşlemin başarılı mı başarısız mı olduğunu `bool` olarak söyler.
-*   **`val.is_some()` / `val.is_none()` / `val.is_null()`**: Değer var mı yok mu (`Option` için) kontrol eder.
+*   **`val.is_some()` / `val.is_none()` / `val.is_null()`**: Değer  mı yok mu (`Option` için) kontrol eder.
 
  
 ### 13. Derleyici Hedefleri ve Optimizasyon (Targets)
