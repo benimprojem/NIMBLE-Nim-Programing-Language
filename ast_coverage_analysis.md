@@ -75,7 +75,7 @@
 | `Sub (-)` | ✅ | ✅ | ✅ | ✅ | `sub rax, rbx` / `subsd xmm0, xmm1` |
 | `Mul (*)` | ✅ | ✅ | ✅ | ✅ | `imul rbx` / `mulsd xmm0, xmm1` |
 | `Div (/)` | ✅ | ✅ | ✅ | ✅ | `idiv rbx` / `divsd xmm0, xmm1` |
-| `Mod (%)` | ✅ | ✅ | ✅ | ✅ | Int, float :Fix $a - (trunc(a/b) * b)$|
+| `Mod (%)` | ✅ | ✅ | ✅ | ✅ | `Int, float :Fix $a - (trunc(a/b) * b)$` |
 | `Equal (==)` | ✅ | ✅ | ✅ | ✅ | `cmp` + `sete` |
 | `NotEqual (!=)` | ✅ | ✅ | ✅ | ✅ | `cmp` + `setne` |
 | `Greater (>)` | ✅ | ✅ | ✅ | ✅ | `cmp` + `setg` |
@@ -244,7 +244,7 @@
 1. **`Never` Tipi** - `panic`, [exit] için kritik
 2. **`Result<T, E>` Tipi** - Hata yönetimi için zorunlu
 3. **`Try (expr?)` İfadesi** - Hata yönetimi için
-4. **`(true fn)<- <ret fn> ?-> fn (err)` - Ternary kontrole benzer başarılı ise sola, başarısız ise sağa kayar kontrol
+4. **`(h)<- <fn> ?-> fn (err)` - Ternary kontrole benzer başarılı ise sola, başarısız ise sağa kayar kontrol - NIMBLE'a özel
 5. **`Fn(Vec<Type>, Box<Type>)` Tipi** - Lambda/First-class fonksiyonlar
 6. **`StructLiteral` İfadesi** - Struct oluşturma eksik
 7. **`AddressOf (&)` ve `Deref (*)` Operatörleri** - İşaretçi semantiği
@@ -271,7 +271,6 @@
 5. **`Rolling` Mekanizması** - NIMBLE'a özel
 6. **[Group] Tam Desteği** - NIMBLE'a özel
 7. **`Routine` Semantiği** - Belirsiz, spec gerekli
-8. **`(true fn)<- <fn> ?-> fn (err)` - NIMBLE'a özel
 
 ---
 
