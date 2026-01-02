@@ -75,7 +75,7 @@
 | `Sub (-)` | ✅ | ✅ | ✅ | ✅ | `sub rax, rbx` / `subsd xmm0, xmm1` |
 | `Mul (*)` | ✅ | ✅ | ✅ | ✅ | `imul rbx` / `mulsd xmm0, xmm1` |
 | `Div (/)` | ✅ | ✅ | ✅ | ✅ | `idiv rbx` / `divsd xmm0, xmm1` |
-| `Mod (%)` | ✅ | ✅ | ✅ | ✅ | `Int, float :Fix $a - (trunc(a/b) * b)$` |
+| `Mod (%)` | ✅ | ✅ | ✅ | ✅ | `Int, float :Fix `$a - (trunc(a/b) * b)$ |
 | `Equal (==)` | ✅ | ✅ | ✅ | ✅ | `cmp` + `sete` |
 | `NotEqual (!=)` | ✅ | ✅ | ✅ | ✅ | `cmp` + `setne` |
 | `Greater (>)` | ✅ | ✅ | ✅ | ✅ | `cmp` + `setg` |
