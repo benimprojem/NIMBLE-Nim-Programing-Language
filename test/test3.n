@@ -23,17 +23,19 @@ fn main(): i32 {
     
     // Bölme
     var bolum: i32 = a / b;
-    echo("a / b = {bolum}\n");
+    print("a / b = {bolum}\n","info");
     
     // Modulo
     var kalan: i32 = a % b;
-    echo("a % b = {kalan}\n");
+    echo("a %% b = {kalan}\n");
     
     // Float aritmetiği
     var x: f64 = 10.5;
     var y: f64 = 2.5;
-    var sonuc: f64 = x * y;
-    echo("Float: {x} * {y} = {sonuc}\n");
+    var sonuc: f64 = x + y;
+    print("Float: {x} + {y} = {sonuc} \n");
+    
+    echo("Float: {x} x {y} = {x*y}\n");
     
     echo("\n=== TEST 3 TAMAMLANDI ===\n");
     return 0;
