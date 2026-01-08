@@ -1,6 +1,6 @@
-# NIMBLE Programming Language
+# Omni Core Programming Language
 
-**NIMBLE** (NIM Programlama Dili), sistem programlama için tasarlanmış, modern ve performanslı bir programlama dilidir.
+**Omni Core** (OmniCore Programlama Dili), sistem programlama için tasarlanmış, modern ve performanslı bir programlama dilidir.
 
 ## 🚀 Özellikler
 
@@ -25,7 +25,7 @@ cargo build --release
 ## 🎯 Hızlı Başlangıç
 
 ### Merhaba Dünya
-```nim
+```oc
 fn main(): i32 {
     echo("Merhaba, NIMBLE!\n");
     return 0;
@@ -33,7 +33,7 @@ fn main(): i32 {
 ```
 
 ### Diziler ve Döngüler
-```nim
+```oc
 fn main(): i32 {
     var sayilar: arr = [1, 2, 3, 4, 5];
     
@@ -47,7 +47,7 @@ fn main(): i32 {
 ```
 
 ### Renkli Çıktı
-```nim
+```oc
 style basari = "\x1b[32m";
 
 fn main(): i32 {
@@ -119,10 +119,11 @@ MIT License
 
 ## 👨‍💻 Geliştirici
 
-NIMBLE, modern sistem programlama ihtiyaçları için geliştirilmektedir.
+OmniCore, modern sistem programlama ihtiyaçları için geliştirilmektedir.
 
 ---
 
 **Not**: Bu proje aktif geliştirme aşamasındadır. Production kullanımı için henüz hazır değildir.
+
 
 
