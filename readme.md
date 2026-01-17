@@ -1,4 +1,4 @@
-# OCC (OmniCore) Derleyici Gelişim ve Analiz Raporu
+# OCC (OmniCore) v1 Boostrap Derleyici Gelişim ve Analiz Raporu
 
 Bu rapor, OCC derleyicisinin mevcut durumunu, AST (Abstract Syntax Tree) düğümlerinin gerçekleşme oranlarını ve sistemin genel işlevselliğini kapsamlı bir şekilde analiz eder.
 
@@ -79,3 +79,7 @@ AST'de tanımlanan yapıların derleyici aşamalarındaki işlenme durumu:
 
 Derleyici şu an karmaşık uygulamaları, dosya işlemlerini ve veri yapılarını yönetebilecek kapasitede bir **"Üretime Hazır Çekirdek"** (Production-Ready Core) sunmaktadır.
 
+>Artık OmniCore v1. ile devam etmeyeceğim, ilgilenen biri, birileri olursa devam edebilirler.. 
+>Aslında ismi bile bu olmayacaktı bu isim aslında v2 için planlanan isimdi. Diğerini v2 olarak bitireceğim. 
+>Bu proje test ve geliştirme sürecindeki zorluklar ve planlamala sürecinin sürekliliği ile igili idi. 
+>İsteyen istediği gibi kullanabilir. İsmini Değiştirip ben yaptım bile diyebilirsiniz. :) Lütfen bu ismi kullanmayın..
